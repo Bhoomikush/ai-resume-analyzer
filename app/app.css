@@ -27,7 +27,7 @@ main {
   @apply min-h-screen pt-10;
 }
 h1 {
-  @apply max-sm:text-[3rem] text-6xl  text-gradient leading-tight xl:tracking-[-2px] font-semibold;
+  @apply text-5xl lg:text-6xl font-semibold leading-tight text-center max-w-[900px] mx-auto text-gradient;
 }
 
 h2 {
@@ -50,15 +50,24 @@ form {
 }
 
 @layer components {
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#AB8C95] via-[#000000] to-[#8E97C5];
+  .navbar {
+    @apply flex items-center justify-between
+    bg-white rounded-full
+    py-3 px-6
+    max-w-[1152px]
+    mx-auto
+    mt-6;
+    width: calc(100% - 80px);
   }
+
+  .primary-button {
+    @apply primary-gradient text-white rounded-full px-5 py-2.5 cursor-pointer w-fit text-sm font-semibold;
+  }
+
   .gradient-border {
     @apply bg-gradient-to-b from-light-blue-100 to-light-blue-200 p-4 rounded-2xl;
   }
-  .primary-button {
-    @apply primary-gradient text-white rounded-full px-4 py-2 cursor-pointer w-full;
-  }
+
   .resume-nav {
     @apply flex flex-row justify-between items-center p-4 border-b border-gray-200;
   }
@@ -75,29 +84,37 @@ form {
     @apply primary-gradient rounded-full py-4 px-8 cursor-pointer w-[600px] max-md:w-full text-3xl font-semibold text-white;
   }
   .main-section {
-    @apply flex flex-col items-center gap-8 pt-12 max-sm:mx-2 mx-15 pb-5;
+    @apply flex flex-col items-center gap-10 pt-8 pb-10 px-6 max-w-[1280px] mx-auto;
   }
   .page-heading {
-    @apply flex flex-col items-center gap-8 max-w-4xl text-center max-sm:gap-4;
-  }
-  .resumes-section {
-    @apply flex flex-wrap max-md:flex-col max-md:gap-4 gap-6 items-start max-md:items-center w-full max-w-[1850px] justify-evenly;
+    @apply flex flex-col items-center text-center gap-4 max-w-[900px] mx-auto mb-10;
   }
 
+  /* Grid layout for the resume cards — single source of truth */
+  .resumes-section {
+    @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 w-full max-w-[1200px] mx-auto;
+  }
+
+  /* Single source of truth for card styling */
   .resume-card {
-    @apply flex flex-col gap-8 h-[560px] w-[350px] lg:w-[430px] xl:w-[490px] bg-white rounded-2xl p-4;
+    @apply bg-white rounded-2xl p-5 flex flex-col gap-4 shadow-sm transition-all duration-300 hover:shadow-md;
   }
 
   .resume-card-header {
-    @apply flex flex-row gap-2 justify-between min-h-[110px] max-sm:flex-col items-center max-md:justify-center max-md:items-center;
+    @apply flex justify-between items-start;
   }
-
   .feedback-section {
     @apply flex flex-col gap-8 w-1/2 px-8 max-lg:w-full py-6;
   }
 
   .navbar {
-    @apply flex flex-row justify-between items-center bg-white rounded-full p-4 w-full px-10 max-w-[1200px] mx-auto;
+    @apply flex items-center justify-between
+    bg-white rounded-full
+    py-4 px-8
+    max-w-[1240px]
+    mx-auto
+    mt-6;
+    width: calc(100% - 80px);
   }
 
   .score-badge {
