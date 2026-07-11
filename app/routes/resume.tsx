@@ -119,7 +119,7 @@ export default function ResumeDetails() {
 
                 <div className="flex flex-col lg:flex-row gap-8 items-start">
                     {/* Left Column: Image Preview */}
-                    <div className="w-full lg:w-1/2 gradient-border lg:sticky lg:top-6">
+                    <div className="w-full lg:w-1/2 gradient-border lg:sticky lg:top-6 lg:max-h-[calc(100vh-48px)] lg:overflow-y-auto">
                         <div className="bg-white p-2 rounded-xl shadow-inner">
                             {imageUrl ? (
                                 <img
