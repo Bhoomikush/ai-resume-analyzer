@@ -7,4 +7,16 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
+  server: {
+    headers: {
+      "Cross-Origin-Opener-Policy": "unsafe-none",
+      "Cross-Origin-Embedder-Policy": "unsafe-none",
+    },
+  },
+  preview: {
+    headers: {
+      "Cross-Origin-Opener-Policy": "unsafe-none",
+      "Cross-Origin-Embedder-Policy": "unsafe-none",
+    },
+  },
 });

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 import Navbar from "~/components/Navbar";
 import ResumeCard from "~/components/ResumeCard";
 import { resumes } from "../../constants";
-import { usePuterStore } from "../../lib/puter";
+import { usePuterStore } from "~/lib/puter";
 
 export function meta({}: Route.MetaArgs) {
     return [
