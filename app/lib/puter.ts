@@ -22,7 +22,7 @@ declare global {
             ai: {
                 chat: (
                     prompt: string | ChatMessage[],
-                    imageURL?: string | PuterChatOptions,
+                    imageURL?: string | PuterChatOptions | Blob | File,
                     testMode?: boolean,
                     options?: PuterChatOptions
                 ) => Promise<Object>;
@@ -68,7 +68,7 @@ interface PuterStore {
     ai: {
         chat: (
             prompt: string | ChatMessage[],
-            imageURL?: string | PuterChatOptions,
+            imageURL?: string | PuterChatOptions | Blob | File,
             testMode?: boolean,
             options?: PuterChatOptions
         ) => Promise<AIResponse | undefined>;
@@ -312,7 +312,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
 
     const chat = async (
         prompt: string | ChatMessage[],
-        imageURL?: string | PuterChatOptions,
+        imageURL?: string | PuterChatOptions | Blob | File,
         testMode?: boolean,
         options?: PuterChatOptions
     ) => {
@@ -334,23 +334,14 @@ export const usePuterStore = create<PuterStore>((set, get) => {
             return;
         }
 
+        const rawBlob = await puter.fs.read(path);
+        const blob = new Blob([rawBlob], { type: 'image/png' });
+
         return puter.ai.chat(
-            [
-                {
-                    role: "user",
-                    content: [
-                        {
-                            type: "file",
-                            puter_path: path,
-                        },
-                        {
-                            type: "text",
-                            text: message,
-                        },
-                    ],
-                },
-            ],
-            { model: "claude-sonnet-4-6" }
+            message,
+            blob,
+            false,
+            { model: "claude-sonnet-4" }
         ) as Promise<AIResponse | undefined>;
     };
 
@@ -434,7 +425,7 @@ export const usePuterStore = create<PuterStore>((set, get) => {
         ai: {
             chat: (
                 prompt: string | ChatMessage[],
-                imageURL?: string | PuterChatOptions,
+                imageURL?: string | PuterChatOptions | Blob | File,
                 testMode?: boolean,
                 options?: PuterChatOptions
             ) => chat(prompt, imageURL, testMode, options),

@@ -44,35 +44,102 @@ const Upload = () => {
                 resumePath: uploadedFile.path,
                 imagePath: uploadedImage.path,
                 companyName, jobTitle, jobDescription,
-                feedback: '',
+                feedback: '' as any,
             }
             await kv.set(`resume:${uuid}`, JSON.stringify(data));
 
             setStatusText('Analyzing...');
-            console.log("Calling ai.feedback with resume path:", uploadedFile.path);
+            console.log("Calling ai.feedback with image path:", uploadedImage.path);
 
             const feedback = await ai.feedback(
-                uploadedFile.path,
+                uploadedImage.path,
                 prepareInstructions({ jobTitle, jobDescription })
             )
             console.log("Raw feedback response:", feedback);
 
-            if (!feedback) return setStatusText('Error: Failed to analyze resume');
+            if (!feedback || !feedback.message) {
+                return setStatusText('Error: Invalid response structure from AI model');
+            }
 
-            const feedbackText = typeof feedback.message.content === 'string'
-                ? feedback.message.content
-                : feedback.message.content[0].text;
+            const content = feedback.message.content;
+            let feedbackText = "";
+            if (typeof content === 'string') {
+                feedbackText = content;
+            } else if (Array.isArray(content) && content.length > 0) {
+                feedbackText = content[0].text || "";
+            }
 
             console.log("Feedback text before parsing:", feedbackText);
+            if (!feedbackText) {
+                return setStatusText('Error: Empty feedback received from AI model');
+            }
 
-            data.feedback = JSON.parse(feedbackText);
+            let cleanedText = feedbackText.trim();
+            if (cleanedText.startsWith("```")) {
+                cleanedText = cleanedText.replace(/^```(?:json)?\n?/, "");
+                cleanedText = cleanedText.replace(/\n?```$/, "");
+                cleanedText = cleanedText.trim();
+            }
+
+            const rawFeedback = JSON.parse(cleanedText);
+            
+            const findKey = (obj: any, target: string) => {
+                if (!obj) return undefined;
+                // Try exact match, then case-insensitive, then remove underscores
+                const keys = Object.keys(obj);
+                const exact = keys.find(k => k === target);
+                if (exact) return obj[exact];
+                const caseInsensitive = keys.find(k => k.toLowerCase() === target.toLowerCase());
+                if (caseInsensitive) return obj[caseInsensitive];
+                const cleanTarget = target.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+                const matched = keys.find(k => k.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() === cleanTarget);
+                return matched ? obj[matched] : undefined;
+            };
+            
+            const normalizeTips = (tips: any) => {
+                if (!Array.isArray(tips)) return [];
+                return tips.map(t => ({
+                    type: findKey(t, 'type') || 'improve',
+                    tip: findKey(t, 'tip') || '',
+                    explanation: findKey(t, 'explanation') || ''
+                }));
+            };
+
+            const normalizeSection = (sectionName: string) => {
+                const section = findKey(rawFeedback, sectionName);
+                if (!section) return { score: 0, tips: [] };
+                return {
+                    score: Number(findKey(section, 'score')) || 0,
+                    tips: normalizeTips(findKey(section, 'tips'))
+                };
+            };
+
+            data.feedback = {
+                overallScore: Number(findKey(rawFeedback, 'overallScore')) || Number(findKey(rawFeedback, 'overallscore')) || 0,
+                ATS: normalizeSection('ATS'),
+                toneAndStyle: normalizeSection('toneAndStyle'),
+                content: normalizeSection('content'),
+                structure: normalizeSection('structure'),
+                skills: normalizeSection('skills')
+            };
+
             await kv.set(`resume:${uuid}`, JSON.stringify(data));
             setStatusText('Analysis complete, redirecting...');
             console.log(data);
             navigate(`/resume/${uuid}`);
-        } catch (err) {
+        } catch (err: any) {
             console.error("handleAnalyze error:", err);
-            setStatusText(`Error: ${err instanceof Error ? err.message : String(err)}`);
+            let errorMessage = "Unknown error";
+            if (err) {
+                if (err instanceof Error) {
+                    errorMessage = err.message;
+                } else if (typeof err === 'object') {
+                    errorMessage = err.message || err.error || JSON.stringify(err);
+                } else {
+                    errorMessage = String(err);
+                }
+            }
+            setStatusText(`Error: ${errorMessage}`);
         }
     }
 
