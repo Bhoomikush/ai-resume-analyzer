@@ -163,30 +163,35 @@ const Upload = () => {
         <main className="bg-[url('/images/bg-main.svg')] bg-cover">
             <Navbar />
 
-            <section className="main-section">
-                <div className="page-heading py-16">
+            <section className="main-section max-w-[680px]">
+                <div className="page-heading">
                     <h1>Smart feedback for your dream job</h1>
                     {isProcessing ? (
-                        <>
-                            <h2>{statusText}</h2>
-                            <img src="/images/resume-scan.gif" className="w-full" />
-                        </>
+                        <div className="flex flex-col items-center gap-6 mt-12 w-full animate-in">
+                            <h2 className="animate-pulse text-indigo-600 font-semibold text-lg">{statusText}</h2>
+                            <div className="w-full max-w-md rounded-3xl overflow-hidden border border-slate-100 shadow-[0_15px_50px_rgba(99,102,241,0.06)] bg-white p-3">
+                                <img src="/images/resume-scan.gif" className="w-full rounded-2xl" alt="Scanning resume..." />
+                            </div>
+                        </div>
                     ) : (
                         <h2>Drop your resume for an ATS score and improvement tips</h2>
                     )}
-                    {!isProcessing && (
-                        <form id="upload-form" onSubmit={handleSubmit} className="flex flex-col gap-4 mt-8">
+                </div>
+
+                {!isProcessing && (
+                    <div className="w-full bg-white p-8 md:p-10 rounded-3xl border border-slate-100 shadow-[0_15px_40px_rgba(0,0,0,0.015)] animate-in mt-2">
+                        <form id="upload-form" onSubmit={handleSubmit} className="flex flex-col gap-6 w-full">
                             <div className="form-div">
                                 <label htmlFor="company-name">Company Name</label>
-                                <input type="text" name="company-name" placeholder="Company Name" id="company-name" />
+                                <input type="text" name="company-name" placeholder="Google, Stripe, etc." id="company-name" required />
                             </div>
                             <div className="form-div">
                                 <label htmlFor="job-title">Job Title</label>
-                                <input type="text" name="job-title" placeholder="Job Title" id="job-title" />
+                                <input type="text" name="job-title" placeholder="Frontend Engineer" id="job-title" required />
                             </div>
                             <div className="form-div">
                                 <label htmlFor="job-description">Job Description</label>
-                                <textarea rows={5} name="job-description" placeholder="Job Description" id="job-description" />
+                                <textarea rows={5} name="job-description" placeholder="Paste the job description here..." id="job-description" required />
                             </div>
 
                             <div className="form-div">
@@ -194,12 +199,12 @@ const Upload = () => {
                                 <FileUploader onFileSelect={handleFileSelect} />
                             </div>
 
-                            <button className="primary-button" type="submit">
+                            <button className="primary-button w-full justify-center flex py-3.5 mt-2" type="submit">
                                 Analyze Resume
                             </button>
                         </form>
-                    )}
-                </div>
+                    </div>
+                )}
             </section>
         </main>
     )

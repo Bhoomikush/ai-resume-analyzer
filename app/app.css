@@ -1,169 +1,176 @@
-@import url("https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @theme {
-  --font-sans: "Mona Sans", ui-sans-serif, system-ui, sans-serif,
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif,
   "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --color-dark-200: #475467;
-  --color-light-blue-100: #c1d3f81a;
-  --color-light-blue-200: #a7bff14d;
+  --color-dark-200: #334155;
+  --color-light-blue-100: rgba(241, 245, 249, 0.6);
+  --color-light-blue-200: rgba(203, 213, 225, 0.4);
 
-  --color-badge-green: #d5faf1;
-  --color-badge-red: #f9e3e2;
-  --color-badge-yellow: #fceed8;
+  --color-badge-green: #e6fcf5;
+  --color-badge-red: #fff5f5;
+  --color-badge-yellow: #fff9db;
 
-  --color-badge-green-text: #254d4a;
-  --color-badge-red-text: #752522;
-  --color-badge-yellow-text: #73321b;
+  --color-badge-green-text: #0ca678;
+  --color-badge-red-text: #fa5252;
+  --color-badge-yellow-text: #f59f00;
 }
 
 html,
 body {
-  @apply bg-white;
+  @apply bg-slate-50/50 text-slate-800 antialiased selection:bg-indigo-500/20 selection:text-indigo-900;
 }
 
 main {
-  @apply min-h-screen pt-10;
+  @apply min-h-screen pt-10 pb-20;
 }
+
 h1 {
-  @apply text-5xl lg:text-6xl font-semibold leading-tight text-center max-w-[900px] mx-auto text-gradient;
+  @apply text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] text-center max-w-[900px] mx-auto text-gradient pb-2;
 }
 
 h2 {
-  @apply max-sm:text-xl text-3xl text-dark-200;
+  @apply max-sm:text-lg text-2xl text-slate-500 font-medium tracking-tight text-center;
 }
 
 label {
-  @apply text-dark-200;
+  @apply text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5 transition-colors duration-200;
 }
+
 input {
-  @apply w-full p-4 inset-shadow rounded-2xl focus:outline-none bg-white;
+  @apply w-full p-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 focus:outline-none bg-white transition-all duration-200 shadow-sm placeholder:text-slate-400;
 }
 
 textarea {
-  @apply w-full p-4 inset-shadow rounded-2xl focus:outline-none bg-white;
+  @apply w-full p-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 focus:outline-none bg-white transition-all duration-200 shadow-sm placeholder:text-slate-400;
 }
 
 form {
-  @apply flex flex-col items-start gap-8 w-full;
+  @apply flex flex-col items-start gap-6 w-full;
 }
 
 @layer components {
   .navbar {
     @apply flex items-center justify-between
-    bg-white rounded-full
-    py-3 px-6
-    max-w-[1152px]
+    bg-white/80 backdrop-blur-md rounded-full
+    py-3.5 px-8
+    max-w-[1240px]
     mx-auto
-    mt-6;
-    width: calc(100% - 80px);
+    mt-4
+    border border-slate-100
+    shadow-[0_8px_30px_rgb(0,0,0,0.02)]
+    transition-all duration-300;
+    width: calc(100% - 48px);
   }
 
   .primary-button {
-    @apply primary-gradient text-white rounded-full px-5 py-2.5 cursor-pointer w-fit text-sm font-semibold;
+    @apply primary-gradient text-white rounded-full px-6 py-3 cursor-pointer w-fit text-sm font-semibold tracking-wide shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 ease-out;
   }
 
   .gradient-border {
-    @apply bg-gradient-to-b from-light-blue-100 to-light-blue-200 p-4 rounded-2xl;
+    @apply bg-slate-50/80 border border-slate-100 p-4 rounded-2xl transition-all duration-300;
   }
 
   .resume-nav {
-    @apply flex flex-row justify-between items-center p-4 border-b border-gray-200;
+    @apply flex flex-row justify-between items-center p-4 border-b border-slate-100;
   }
+
   .resume-summary {
     @apply flex flex-row items-center justify-center p-4 gap-4;
     .category {
-      @apply flex flex-row gap-2 items-center bg-gray-50 rounded-2xl p-4 w-full justify-between;
+      @apply flex flex-row gap-2 items-center bg-slate-50/50 rounded-2xl p-4 w-full justify-between border border-slate-100;
     }
   }
+
   .back-button {
-    @apply flex flex-row items-center gap-2 border border-gray-200 rounded-lg p-2 shadow-sm;
+    @apply flex flex-row items-center gap-2 border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 rounded-xl px-4 py-2 shadow-sm transition-all duration-200 text-sm font-medium text-slate-600;
   }
+
   .auth-button {
-    @apply primary-gradient rounded-full py-3.5 px-8 cursor-pointer w-full text-lg md:text-xl font-semibold text-white transition-all duration-200 hover:opacity-95 shadow-sm active:scale-98;
+    @apply primary-gradient rounded-xl py-3.5 px-8 cursor-pointer w-full text-base font-semibold text-white transition-all duration-200 hover:shadow-lg hover:shadow-indigo-600/20 hover:scale-[1.01] active:scale-[0.98] shadow-sm;
   }
+
   .main-section {
-    @apply flex flex-col items-center gap-10 pt-8 pb-10 px-6 max-w-[1280px] mx-auto;
+    @apply flex flex-col items-center gap-12 pt-8 pb-10 px-6 max-w-[1280px] mx-auto;
   }
+
   .page-heading {
-    @apply flex flex-col items-center text-center gap-4 max-w-[900px] mx-auto mb-10;
+    @apply flex flex-col items-center text-center gap-4 max-w-[900px] mx-auto mb-6;
   }
 
-  /* Grid layout for the resume cards — single source of truth */
   .resumes-section {
-    @apply grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 w-full max-w-[1200px] mx-auto;
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-[1200px] mx-auto;
   }
 
-  /* Single source of truth for card styling */
   .resume-card {
-    @apply bg-white rounded-2xl p-5 flex flex-col gap-4 shadow-sm transition-all duration-300 hover:shadow-md;
+    @apply bg-white rounded-2xl p-6 flex flex-col gap-5 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.015)] transition-all duration-300 hover:shadow-[0_15px_40px_rgba(99,102,241,0.06)] hover:border-indigo-200/50 hover:scale-[1.02];
   }
 
   .resume-card-header {
-    @apply flex justify-between items-start;
+    @apply flex justify-between items-start gap-4;
   }
+
   .feedback-section {
     @apply flex flex-col gap-8 w-1/2 px-8 max-lg:w-full py-6;
   }
 
-  .navbar {
-    @apply flex items-center justify-between
-    bg-white rounded-full
-    py-4 px-8
-    max-w-[1240px]
-    mx-auto
-    mt-6;
-    width: calc(100% - 80px);
-  }
-
   .score-badge {
-    @apply flex flex-row items-center justify-center py-1 px-2 gap-4 rounded-[96px];
+    @apply flex flex-row items-center justify-center py-1 px-2 gap-4 rounded-full;
   }
 
   .form-div {
-    @apply flex flex-col gap-2 w-full items-start;
+    @apply flex flex-col gap-1 w-full items-start;
   }
 
   .uplader-drag-area {
-    @apply relative p-8 text-center transition-all duration-700 cursor-pointer bg-white rounded-2xl min-h-[208px];
+    @apply relative p-8 text-center transition-all duration-300 cursor-pointer bg-white border-2 border-dashed border-slate-200 hover:border-indigo-400 hover:bg-slate-50/50 rounded-2xl min-h-[180px] flex flex-col items-center justify-center gap-3;
   }
+
   .uploader-selected-file {
-    @apply flex items-center justify-between p-3 bg-gray-50 rounded-2xl;
+    @apply flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl w-full;
   }
 }
 
 @utility bg-gradient {
-  background: linear-gradient(to bottom, #f0f4ff 60%, #fa7185cc);
+  background: radial-gradient(circle at top, rgba(99, 102, 241, 0.05) 0%, rgba(255, 255, 255, 0) 70%), #fafafa;
 }
 
 @utility text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-[#AB8C95] via-[#000000] to-[#8E97C5];
+  background: linear-gradient(135deg, #1e293b 0%, #475569 50%, #0f172a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 @utility gradient-hover {
-  @apply bg-gradient-to-b from-light-blue-100 to-light-blue-200;
+  @apply bg-gradient-to-b from-slate-50/80 to-slate-100/50;
 }
 
 @utility primary-gradient {
-  background: linear-gradient(to bottom, #8e98ff, #606beb);
-  box-shadow: 0px 74px 21px 0px #6678ef00;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
 }
 
 @utility primary-gradient-hover {
-  background: linear-gradient(to bottom, #717dff, #4957eb);
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
 }
 
 @utility inset-shadow {
-  box-shadow: inset 0 0 12px 0 rgba(36, 99, 235, 0.2);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
+
+.animate-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

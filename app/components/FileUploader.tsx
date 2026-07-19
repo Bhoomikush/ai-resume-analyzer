@@ -31,35 +31,39 @@ const FileUploader = ({ onFileSelect }: FileUploaderProps) => {
     };
 
     return (
-        <div className="w-full gradient-border">
-            <div {...getRootProps()}>
+        <div className="w-full">
+            <div {...getRootProps()} className="focus:outline-none">
                 <input {...getInputProps()} />
-                <div className="space-y-4 cursor-pointer">
-                    {file ? (
-                        <div className="uploader-selected-file" onClick={(e) => e.stopPropagation()}>
-                            <img src="/images/pdf.png" alt="pdf" className="size-10" />
-                            <div className="flex items-center space-x-3">
-                                <div>
-                                    <p className="text-sm font-medium text-gray-700 truncate max-w-xs">{file.name}</p>
-                                    <p className="text-sm text-gray-500">{formatSize(file.size)}</p>
-                                </div>
+                {file ? (
+                    <div className="uploader-selected-file transition-all duration-200 hover:bg-slate-100/70" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center space-x-4">
+                            <div className="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center border border-rose-100 flex-shrink-0">
+                                <img src="/images/pdf.png" alt="pdf" className="w-6 h-6 object-contain" />
                             </div>
-                            <button className="p-2 cursor-pointer" onClick={removeFile}>
-                                <img src="/icons/cross.svg" alt="remove" className="w-4 h-4" />
-                            </button>
+                            <div className="text-left">
+                                <p className="text-sm font-semibold text-slate-800 truncate max-w-[200px] sm:max-w-xs">{file.name}</p>
+                                <p className="text-xs font-medium text-slate-400">{formatSize(file.size)}</p>
+                            </div>
                         </div>
-                    ) : (
+                        <button className="p-2 cursor-pointer hover:bg-slate-200/50 rounded-lg transition-colors duration-150" onClick={removeFile}>
+                            <img src="/icons/cross.svg" alt="remove" className="w-4 h-4 opacity-60 hover:opacity-100" />
+                        </button>
+                    </div>
+                ) : (
+                    <div className="uplader-drag-area group">
+                        <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-200">
+                            <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                        </div>
                         <div>
-                            <div className="mx-auto w-16 h-16 flex items-center justify-center mb-2">
-                                <img src="/icons/info.svg" alt="upload" className="size-20" />
-                            </div>
-                            <p className="text-lg text-gray-500">
-                                <span className="font-semibold">Click to upload</span> or drag and drop
+                            <p className="text-sm text-slate-600">
+                                <span className="font-semibold text-indigo-600 group-hover:text-indigo-700">Click to upload</span> or drag and drop
                             </p>
-                            <p className="text-lg text-gray-500">PDF (max {formatSize(maxFileSize)})</p>
+                            <p className="text-xs text-slate-400 mt-1">PDF format (up to {formatSize(maxFileSize)})</p>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
         </div>
     )
