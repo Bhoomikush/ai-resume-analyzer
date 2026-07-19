@@ -49,11 +49,11 @@ const Upload = () => {
             await kv.set(`resume:${uuid}`, JSON.stringify(data));
 
             setStatusText('Analyzing...');
-            console.log("Calling ai.feedback with image path:", uploadedImage.path);
+            console.log("Calling ai.feedback with image path and text:", uploadedImage.path);
 
             const feedback = await ai.feedback(
                 uploadedImage.path,
-                prepareInstructions({ jobTitle, jobDescription })
+                prepareInstructions({ jobTitle, jobDescription, extractedText: imageFile.extractedText })
             )
             console.log("Raw feedback response:", feedback);
 
@@ -120,7 +120,8 @@ const Upload = () => {
                 toneAndStyle: normalizeSection('toneAndStyle'),
                 content: normalizeSection('content'),
                 structure: normalizeSection('structure'),
-                skills: normalizeSection('skills')
+                skills: normalizeSection('skills'),
+                extendedATS: findKey(rawFeedback, 'extendedATS')
             };
 
             await kv.set(`resume:${uuid}`, JSON.stringify(data));

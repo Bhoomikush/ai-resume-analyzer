@@ -57,4 +57,25 @@ export interface Feedback {
             explanation: string;
         }[];
     };
+    extendedATS?: {
+        keywordMatchScore: number;
+        projectRelevanceScore: number;
+        skillsMatchScore: number;
+        formattingScore: number;
+        educationScore: number;
+        matchedKeywords: string[];
+        missingKeywords: string[];
+        keywordExplanations: { [keyword: string]: string };
+        detectedSections: {
+            contactInfo: boolean;
+            profileSummary: boolean;
+            skills: boolean;
+            projects: boolean;
+            experience: boolean;
+            education: boolean;
+            certifications: boolean;
+        };
+        strengths: string[];
+        improvements: string[];
+    };
 }

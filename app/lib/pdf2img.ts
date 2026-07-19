@@ -2,6 +2,7 @@ export interface PdfConversionResult {
     imageUrl: string;
     file: File | null;
     error?: string;
+    extractedText?: string;
 }
 
 let pdfjsLib: any = null;
@@ -23,6 +24,26 @@ async function loadPdfJs(): Promise<any> {
     });
 
     return loadPromise;
+}
+
+export async function extractPdfText(file: File): Promise<string> {
+    try {
+        const lib = await loadPdfJs();
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await lib.getDocument({ data: arrayBuffer }).promise;
+        let fullText = "";
+        
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map((item: any) => item.str).join(" ");
+            fullText += pageText + "\n";
+        }
+        return fullText;
+    } catch (err) {
+        console.error("Error extracting text from PDF:", err);
+        return "";
+    }
 }
 
 export async function convertPdfToImage(
@@ -49,6 +70,21 @@ export async function convertPdfToImage(
 
         await page.render({ canvasContext: context!, viewport }).promise;
 
+        // Also extract full text
+        let extractedText = "";
+        try {
+            let fullText = "";
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const p = await pdf.getPage(i);
+                const textContent = await p.getTextContent();
+                const pageText = textContent.items.map((item: any) => item.str).join(" ");
+                fullText += pageText + "\n";
+            }
+            extractedText = fullText;
+        } catch (textErr) {
+            console.error("Text extraction failed during image conversion:", textErr);
+        }
+
         return new Promise((resolve) => {
             canvas.toBlob(
                 (blob) => {
@@ -62,12 +98,14 @@ export async function convertPdfToImage(
                         resolve({
                             imageUrl: URL.createObjectURL(blob),
                             file: imageFile,
+                            extractedText
                         });
                     } else {
                         resolve({
                             imageUrl: "",
                             file: null,
                             error: "Failed to create image blob",
+                            extractedText
                         });
                     }
                 },

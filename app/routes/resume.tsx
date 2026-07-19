@@ -147,11 +147,130 @@ export default function ResumeDetails() {
                             </div>
                         )}
 
-                        {/* ATS Section */}
-                        {feedback.ATS && (
+                        {/* Extended ATS Score & Keyword Coverage Breakdown */}
+                        {feedback.extendedATS && (
+                            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-6">
+                                <div className="border-b border-gray-100 pb-3 flex justify-between items-center">
+                                    <h3 className="text-lg font-bold text-gray-900">ATS Match Engine Analysis</h3>
+                                    <span className="bg-blue-50 text-blue-700 font-bold px-3 py-1 rounded-full text-sm">
+                                        Overall ATS Match: {feedback.ATS.score}%
+                                    </span>
+                                </div>
+
+                                {/* Weighted Progress Bars */}
+                                <div className="flex flex-col gap-4">
+                                    <h4 className="text-sm font-bold text-gray-700">Scoring Breakdown</h4>
+                                    {[
+                                        { label: "Keyword Match (45%)", score: feedback.extendedATS.keywordMatchScore, color: "bg-blue-600" },
+                                        { label: "Project Relevance (25%)", score: feedback.extendedATS.projectRelevanceScore, color: "bg-indigo-600" },
+                                        { label: "Skills Match (10%)", score: feedback.extendedATS.skillsMatchScore, color: "bg-emerald-600" },
+                                        { label: "Formatting & Readability (10%)", score: feedback.extendedATS.formattingScore, color: "bg-amber-500" },
+                                        { label: "Education & Certs (10%)", score: feedback.extendedATS.educationScore, color: "bg-purple-600" },
+                                    ].map((bar, i) => (
+                                        <div key={i} className="flex flex-col gap-1">
+                                            <div className="flex justify-between text-xs font-semibold text-gray-600">
+                                                <span>{bar.label}</span>
+                                                <span>{bar.score}%</span>
+                                            </div>
+                                            <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                                                <div className={`${bar.color} h-full rounded-full transition-all duration-500`} style={{ width: `${bar.score}%` }}></div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Keyword Coverage Lists */}
+                                <div className="flex flex-col gap-4">
+                                    <h4 className="text-sm font-bold text-gray-700">Keyword Coverage</h4>
+                                    
+                                    {/* Matched Keywords (Green) */}
+                                    <div className="flex flex-col gap-2">
+                                        <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Matched Keywords</span>
+                                        <div className="flex flex-wrap gap-2">
+                                            {feedback.extendedATS.matchedKeywords.map((kw, i) => (
+                                                <span key={i} className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-medium">
+                                                    ✓ {kw}
+                                                </span>
+                                            ))}
+                                            {feedback.extendedATS.matchedKeywords.length === 0 && (
+                                                <span className="text-xs text-gray-400">No keywords matched yet.</span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Missing Keywords (Red / Interactive) */}
+                                    <div className="flex flex-col gap-2">
+                                        <span className="text-xs font-semibold text-rose-600 uppercase tracking-wider">Missing Keywords (Click to view tip)</span>
+                                        <div className="flex flex-wrap gap-2">
+                                            {feedback.extendedATS.missingKeywords.map((kw, i) => (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => {
+                                                        const explanation = feedback.extendedATS?.keywordExplanations?.[kw] || "This keyword is highly relevant to the role. Consider incorporating details of your experience with it.";
+                                                        alert(`Why "${kw}" matters:\n\n${explanation}`);
+                                                    }}
+                                                    className="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer"
+                                                >
+                                                    + {kw}
+                                                </button>
+                                            ))}
+                                            {feedback.extendedATS.missingKeywords.length === 0 && (
+                                                <span className="text-xs text-gray-400">No missing keywords! Great job!</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* ATS Readability Checklist */}
+                                <div className="flex flex-col gap-3">
+                                    <h4 className="text-sm font-bold text-gray-700">ATS Readability Checklist</h4>
+                                    <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
+                                        {[
+                                            { label: "Contact Info", present: feedback.extendedATS.detectedSections.contactInfo },
+                                            { label: "Summary / Profile", present: feedback.extendedATS.detectedSections.profileSummary },
+                                            { label: "Skills", present: feedback.extendedATS.detectedSections.skills },
+                                            { label: "Projects", present: feedback.extendedATS.detectedSections.projects },
+                                            { label: "Experience", present: feedback.extendedATS.detectedSections.experience },
+                                            { label: "Education", present: feedback.extendedATS.detectedSections.education },
+                                            { label: "Certifications", present: feedback.extendedATS.detectedSections.certifications },
+                                        ].map((sec, i) => (
+                                            <div key={i} className="flex items-center gap-2">
+                                                <span className={sec.present ? "text-emerald-500 font-bold" : "text-gray-300"}>
+                                                    {sec.present ? "✓" : "○"}
+                                                </span>
+                                                <span className={sec.present ? "text-gray-700" : "text-gray-400 font-normal"}>{sec.label}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Resume Strengths & Areas for Improvement */}
+                                <div className="flex flex-col gap-4 border-t border-gray-100 pt-4">
+                                    <div>
+                                        <h4 className="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-2">Resume Strengths</h4>
+                                        <ul className="list-disc pl-5 text-sm text-gray-700 flex flex-col gap-1">
+                                            {feedback.extendedATS.strengths.map((str, i) => (
+                                                <li key={i}>{str}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-xs font-bold text-rose-700 uppercase tracking-wider mb-2">Areas for Improvement</h4>
+                                        <ul className="list-disc pl-5 text-sm text-gray-700 flex flex-col gap-1">
+                                            {feedback.extendedATS.improvements.map((imp, i) => (
+                                                <li key={i}>{imp}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Classic ATS Tips Section */}
+                        {feedback.ATS && (!feedback.extendedATS || feedback.ATS.tips.length > 0) && (
                             <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4">
                                 <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-                                    <h3 className="text-lg font-bold text-gray-900">ATS Suitability</h3>
+                                    <h3 className="text-lg font-bold text-gray-900">ATS Suggestions</h3>
                                     <span className="bg-blue-50 text-blue-700 font-semibold px-3 py-1 rounded-full text-sm">
                                         Score: {feedback.ATS.score}%
                                     </span>
